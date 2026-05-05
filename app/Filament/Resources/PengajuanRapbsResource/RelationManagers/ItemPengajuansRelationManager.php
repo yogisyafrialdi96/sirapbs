@@ -14,6 +14,8 @@ use Filament\Schemas\Schema;
 use Filament\Tables;
 use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Tables\Table;
+use Illuminate\Auth\Access\Response;
+use Illuminate\Database\Eloquent\Model;
 
 class ItemPengajuansRelationManager extends RelationManager
 {
@@ -28,6 +30,31 @@ class ItemPengajuansRelationManager extends RelationManager
     public function isReadOnly(): bool
     {
         return ! in_array($this->getOwnerRecord()->status, ['draft', 'direvisi']);
+    }
+
+    /**
+     * Lewati pemeriksaan policy karena isReadOnly() sudah menjadi penjaga akses.
+     * Tanpa ini, Filament fallback ke Gate::callBeforeCallbacks() yang perilakunya
+     * bisa berbeda di hosting vs localhost.
+     */
+    protected function getCreateAuthorizationResponse(): Response
+    {
+        return Response::allow();
+    }
+
+    protected function getEditAuthorizationResponse(Model $record): Response
+    {
+        return Response::allow();
+    }
+
+    protected function getDeleteAuthorizationResponse(Model $record): Response
+    {
+        return Response::allow();
+    }
+
+    protected function getDeleteAnyAuthorizationResponse(): Response
+    {
+        return Response::allow();
     }
 
     public function form(Schema $schema): Schema
