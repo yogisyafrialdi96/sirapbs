@@ -51,7 +51,7 @@ class PengajuanRapbsResource extends Resource
                     ->required()
                     ->default(fn () => auth()->id())
                     ->disabled(fn () => auth()->user()?->isPegawai() || request()->routeIs('*.edit'))
-                    ->dehydrated(),
+                    ->dehydrated(true),
 
                 Forms\Components\Select::make('tahun_ajaran_id')
                     ->label('Tahun Ajaran')
@@ -91,6 +91,11 @@ class PengajuanRapbsResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->recordUrl(fn (PengajuanRapbs $record): string =>
+                (in_array($record->status, ['draft', 'direvisi']) && auth()->user()?->isPegawai())
+                    ? Pages\EditPengajuanRapbs::getUrl(['record' => $record])
+                    : Pages\ViewPengajuanRapbs::getUrl(['record' => $record])
+            )
             ->columns([
                 Tables\Columns\TextColumn::make('kode_pengajuan')
                     ->searchable()

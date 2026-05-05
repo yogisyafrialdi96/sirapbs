@@ -16,6 +16,11 @@ class CreatePengajuanRapbs extends CreateRecord
 
     protected function handleRecordCreation(array $data): Model
     {
+        // Pegawai selalu membuat pengajuan untuk diri sendiri
+        if (auth()->user()->isPegawai()) {
+            $data['user_id'] = auth()->id();
+        }
+
         // Validate: one submission per user per tahun ajaran
         $exists = PengajuanRapbs::where('user_id', $data['user_id'])
             ->where('tahun_ajaran_id', $data['tahun_ajaran_id'])
