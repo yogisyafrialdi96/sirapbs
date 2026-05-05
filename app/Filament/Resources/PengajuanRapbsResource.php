@@ -17,6 +17,7 @@ use Filament\Schemas\Schema;
 use Filament\Tables;
 use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
 
 class PengajuanRapbsResource extends Resource
 {
@@ -28,6 +29,53 @@ class PengajuanRapbsResource extends Resource
     protected static ?string $modelLabel = 'Pengajuan RAPBS';
     protected static ?string $pluralModelLabel = 'Pengajuan RAPBS';
     protected static ?int $navigationSort = 2;
+
+    // ─── Authorization ────────────────────────────────────────────────────────
+    // Override langsung agar tidak bergantung pada Gate/policy yang bisa berbeda
+    // perilakunya di hosting vs localhost.
+
+    public static function canViewAny(): bool
+    {
+        return auth()->check();
+    }
+
+    public static function canCreate(): bool
+    {
+        return auth()->check();
+    }
+
+    public static function canView(Model $record): bool
+    {
+        /** @var \App\Models\User $user */
+        $user = auth()->user();
+
+        return $user->isAdmin() || $record->user_id === $user->id;
+    }
+
+    public static function canEdit(Model $record): bool
+    {
+        /** @var \App\Models\User $user */
+        $user = auth()->user();
+
+        if ($user->isAdmin()) {
+            return true;
+        }
+
+        return $record->user_id === $user->id
+            && in_array($record->status, ['draft', 'direvisi']);
+    }
+
+    public static function canDelete(Model $record): bool
+    {
+        /** @var \App\Models\User $user */
+        $user = auth()->user();
+
+        return $record->user_id === $user->id
+            && in_array($record->status, ['draft', 'ditolak'])
+            || ($user->isAdmin() && in_array($record->status, ['draft', 'ditolak']));
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
 
     public static function form(Schema $schema): Schema
     {
