@@ -1,5 +1,131 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SIRAPBS — Sistem Informasi RAPBS</title>
+    <link rel="preconnect" href="https://fonts.bunny.net">
+    <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600,700" rel="stylesheet"/>
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Instrument Sans', sans-serif;
+            background: linear-gradient(135deg, #1e3a5f 0%, #2563eb 60%, #1d4ed8 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            padding: 2rem;
+        }
+        .card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            border-radius: 1.5rem;
+            padding: 3rem 2.5rem;
+            max-width: 480px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+        }
+        .logo {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .title {
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            margin-bottom: 0.5rem;
+        }
+        .subtitle {
+            font-size: 1rem;
+            color: rgba(255,255,255,0.75);
+            margin-bottom: 2.5rem;
+            line-height: 1.6;
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.875rem 2rem;
+            border-radius: 0.75rem;
+            font-size: 1rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            width: 100%;
+            max-width: 280px;
+        }
+        .btn-primary {
+            background: #fff;
+            color: #1d4ed8;
+            border: 2px solid transparent;
+        }
+        .btn-primary:hover {
+            background: #f0f9ff;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+        .btn-secondary {
+            background: rgba(255,255,255,0.15);
+            color: #fff;
+            border: 2px solid rgba(255,255,255,0.4);
+        }
+        .btn-secondary:hover {
+            background: rgba(255,255,255,0.25);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+        .user-info {
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.7);
+            margin-bottom: 1.5rem;
+        }
+        .user-info strong {
+            color: #fff;
+        }
+        .footer {
+            margin-top: 2rem;
+            font-size: 0.8rem;
+            color: rgba(255,255,255,0.45);
+        }
+        .divider {
+            height: 1px;
+            background: rgba(255,255,255,0.15);
+            margin: 1.5rem 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="logo">📋</div>
+        <h1 class="title">SIRAPBS</h1>
+        <p class="subtitle">Sistem Informasi Rencana Anggaran<br>Pendapatan dan Belanja Sekolah</p>
+
+        <div class="divider"></div>
+
+        @auth
+            <p class="user-info">Selamat datang, <strong>{{ auth()->user()->name }}</strong></p>
+            <a href="{{ url('/admin') }}" class="btn btn-primary">
+                🏠 Masuk Dashboard
+            </a>
+        @else
+            <a href="{{ url('/admin') }}" class="btn btn-primary">
+                🔐 Login ke Sistem
+            </a>
+        @endauth
+
+        <div class="footer">
+            &copy; {{ date('Y') }} SIRAPBS. All rights reserved.
+        </div>
+    </div>
+</body>
+</html>
+
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
